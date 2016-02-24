@@ -209,7 +209,7 @@ public class CoverageCalculator implements RunCommand {
 	
 	/**
 	 * 
-	 * @param pair
+	 * @param pair -- pair of reads
 	 * @param probeMap
 	 * @return the set of probes that best match the read pair, hopefully just one probe
 	 */
@@ -217,7 +217,11 @@ public class CoverageCalculator implements RunCommand {
 		
 		
 		IntervalBucket<BEDEntry>[] bucketsForChr = probeMap.get(pair.getMate1().getReferenceName());
-				
+		
+		if(bucketsForChr == null) {
+			throw new IllegalStateException(pair.getMate1().getReferenceName() + " not found in probeMap " + probeMap.keySet());
+		}
+		
 		HashSet<BEDEntry> entriesForRead = new HashSet<>();
 		
 		List<Interval<BEDEntry>> mate1 = converter.convert(pair.getMate1());
