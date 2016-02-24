@@ -69,7 +69,10 @@ public class SAMRecordToIntervalConverter implements Converter<SAMRecord, List<I
             	} else {
 	            	int currentEnd = currentStart + currentLength - 1;
 	            	
-	            	list.add( buildFeature(in,currentStart,currentEnd,isNegativeStrand)  );
+	            	//if we are starting with a deletion then we should skip
+	            	if(currentEnd >= currentStart) {
+	            		list.add( buildFeature(in,currentStart,currentEnd,isNegativeStrand)  );
+	            	}
 	            	
 	            	
 	            	currentStart = currentEnd + element.getLength() + 1;
@@ -82,8 +85,9 @@ public class SAMRecordToIntervalConverter implements Converter<SAMRecord, List<I
 		
 		//add last feature
 		int currentEnd = currentStart + currentLength - 1;
-		list.add( buildFeature(in,currentStart,currentEnd,isNegativeStrand)  );
-		
+		if(currentEnd >= currentStart) {
+			list.add( buildFeature(in,currentStart,currentEnd,isNegativeStrand)  );
+		}
 		return list;
 	}
 	

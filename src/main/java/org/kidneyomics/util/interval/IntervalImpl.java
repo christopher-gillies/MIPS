@@ -14,6 +14,7 @@ public class IntervalImpl<T> implements Interval<T> {
 			throw new IllegalArgumentException("start and end both must be positive");
 		}
 		if(start > end) {
+			System.err.println("start: " + start + " end: " + end);
 			throw new IllegalArgumentException("start must be less than or equal to the end");
 		}
 	}

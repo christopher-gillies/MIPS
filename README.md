@@ -1,6 +1,35 @@
 # MIPS
 
-# Example of creating bam list
+# Summarizing coverage
+```
+MIPS=/Users/cgillies/Documents/workspace-sts-3.6.1.RELEASE/MIPS/release/MIPS-0.0.1.jar
+BEDFILE=/Users/cgillies/Documents/MIPS/run_2_24_2016/joined_pairs_picked.gapfill.bed
+BAMLIST=/Users/cgillies/Documents/MIPS/run_2_24_2016/bam.list.txt
+OUTFILE=/Users/cgillies/Documents/MIPS/run_2_24_2016/summary_of_coverage.txt
+java -jar $MIPS --command summarizeCoverage --regionList $BEDFILE --bamList $BAMLIST --outfile $OUTFILE
+```
+
+##Investigating results
+```
+head /Users/cgillies/Documents/MIPS/run_2_24_2016/summary_of_coverage.txt
+```
+
+##R script
+```
+library(ggplot2)
+tbl <- read.table("/Users/cgillies/Documents/MIPS/run_2_24_2016/summary_of_coverage.txt",sep="\t",header=T);
+rownames(tbl) <- tbl[,"probe"]
+#remove probe column
+tbl <- tbl[,-1]
+#remove last two rows
+tbl <- data.frame(tbl[1:(dim(tbl)[1] - 2),]);
+
+meds <- apply(tbl,MARGIN=1,FUN=median)
+df <- data.frame(Median=log10(sort(meds,decreasing=TRUE)),Indices=(seq(1,length(meds)))/length(meds));
+ggplot(df,aes(x=Indices,y=Median)) + geom_point() + xlab("Cummulative fraction of probes") + ylab("log10 median depth")
+
+```
+# Creating a bam list
 ##Directory listing of bam list
 ```
 ls /Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/* 
@@ -16,7 +45,7 @@ ls /Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/*
 * file path
 ```
 ls /Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/* | \
-  perl -lane 'next if $_ =~ /.bai$/; $_ =~ /[_]([A-Z]+\d+)[.]dedup/; print "$1\t$_"' \
+  perl -lane 'next if $_ =~ /.bai$/; $_ =~ /(\d+)sampson.+[_]([A-Z]+\d+)[.]dedup/; print "$1"."_"."$2\t$_"' \
   > /Users/cgillies/Documents/MIPS/run_2_24_2016/bam.list.txt
 ```
 

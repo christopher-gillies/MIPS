@@ -9,13 +9,34 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.kidneyomics.mips.ApplicationOptions.Command;
 import org.kidneyomics.util.OptionProcessor;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ApplicationOptionsProcessor implements OptionProcessor {
 
-	@Autowired
-	ApplicationOptions applicationOptions;
 
+	
+	ApplicationOptions applicationOptions;
+	
+	
+	Logger logger;
+	
+	
+	@Autowired
+	ApplicationOptionsProcessor(ApplicationArguments args, LoggerService loggerService, ApplicationOptions applicationOptions) throws ParseException {
+		this.logger = loggerService.getLogger(this);
+		this.applicationOptions = applicationOptions;
+		try {
+			processInputs(args.getSourceArgs());
+		} catch(Exception e) {
+			logger.info(e.getMessage());
+			System.exit(0);
+		}
+		
+	}
 	@Override
 	public void processInputs(String[] args) throws ParseException {
 		
@@ -63,7 +84,7 @@ public class ApplicationOptionsProcessor implements OptionProcessor {
 			Option infileOp = Option.builder()
 			.argName("regionList")
 			.longOpt("regionList")
-			.desc("The region of probes")
+			.desc("A bed file containing the regions of the probes.")
 			.numberOfArgs(1)
 			.hasArg(true)
 			.required(false)
@@ -105,6 +126,9 @@ public class ApplicationOptionsProcessor implements OptionProcessor {
 			applicationOptions.setCommand(Command.HELP);
 		}
 		
+		if(applicationOptions.getCommand() == Command.HELP) {
+			printHelp(options);
+		}
 	}
 	
 	public void printHelp(Options options) {

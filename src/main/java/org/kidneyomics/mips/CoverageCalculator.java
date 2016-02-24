@@ -34,16 +34,27 @@ import org.kidneyomics.util.interval.IntersectionComparator;
 import org.kidneyomics.util.interval.Interval;
 import org.kidneyomics.util.interval.IntervalBucket;
 import org.kidneyomics.util.interval.IntervalUtil;
+import org.slf4j.Logger;
 
 
 @Component
 public class CoverageCalculator implements RunCommand {
 
-	@Autowired
-	ApplicationOptions applicationOptions;
 
+	ApplicationOptions applicationOptions;
+	
+	
+	Logger logger;
+	
+	@Autowired
+	public CoverageCalculator(ApplicationOptions applicationOptions, LoggerService loggerService) {
+		logger = loggerService.getLogger(this);
+		this.applicationOptions = applicationOptions;
+	}
+	
 	@Override
 	public void runCommand() {
+		logger.info("Initializing data structures");
 		String bamList = applicationOptions.getBAMList();
 		String bedFile = applicationOptions.getRegionList();
 		String outfile = applicationOptions.getOutfile();
@@ -58,6 +69,7 @@ public class CoverageCalculator implements RunCommand {
 			e.printStackTrace();
 		}
 		
+		logger.info("Analyzing bed file");
 		/*
 		 * Construct probe map
 		 */
@@ -94,6 +106,7 @@ public class CoverageCalculator implements RunCommand {
 			//for each bam
 			for(BAMEntry bam : bamEntries) {
 				//Process BAM
+				logger.info("Processing bam for " + bam.getId() + ": " + bam.getLocation());
 				File fin = bam.getFile();
 				int pairsCounted = 0;
 				int unmapped = 0;
@@ -119,7 +132,7 @@ public class CoverageCalculator implements RunCommand {
 						
 						pairsCounted++;
 						if(pairsCounted % 100000 == 0) {
-							System.err.println(pairsCounted + " reads counted");
+							logger.info(pairsCounted + " reads counted");
 						}
 						
 					}
@@ -128,6 +141,7 @@ public class CoverageCalculator implements RunCommand {
 				unmappedReadCountPerSample.put(bam.getId(), unmapped);
 			}
 			
+			logger.info("Writing out results to " + outfile);
 			//write results
 			writeResults(outfile, coveragePerProbe, unmappedReadCountPerSample, readsPerSample);
 		} catch(Exception e) {
@@ -171,8 +185,9 @@ public class CoverageCalculator implements RunCommand {
 						writer.append("\t");
 					}
 				}
+				writer.append("\n");
 			}
-			writer.append("\n");
+			
 			
 			//add row for total
 			writer.append("total");
