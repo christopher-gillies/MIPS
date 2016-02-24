@@ -89,6 +89,10 @@ public class ApplicationOptionsProcessor implements OptionProcessor {
 			applicationOptions.setBAMList(cmd.getOptionValue("bamList"));
 		}
 		
+		if(cmd.hasOption("outfile")) {
+			applicationOptions.setOutfile(cmd.getOptionValue("outfile"));
+		}
+		
 		
 		if(cmd.hasOption("command")) {
 			String command = cmd.getOptionValue("command");

@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.kidneyomics.util.interval.Interval;
+import org.kidneyomics.util.interval.IntervalBucket;
 
 public class BEDUtilTest {
 
@@ -49,4 +50,27 @@ public class BEDUtilTest {
 		assertEquals(3,map.get("3").size());
 	}
 
+	
+	@Test
+	public void testOrganizeBuckets() throws IOException {
+		ClassLoader classLoader = getClass().getClassLoader();
+		
+		File file = new File(classLoader.getResource("locations.bed").getFile());
+
+		List<Interval<BEDEntry>> entries = BEDUtil.readBedFileToIntervals(file);
+		
+		assertEquals(7,entries.size());
+		
+		Map<String,List<Interval<BEDEntry>>> map = BEDUtil.organizeByChr(entries);
+		
+		Map<String,IntervalBucket<BEDEntry>[]> mapBucket = BEDUtil.organizeByChrIntoBuckets(map);
+		
+		assertEquals(3,mapBucket.keySet().size());
+		
+		assertEquals(1,mapBucket.get("1").length);
+		
+		assertEquals(1,mapBucket.get("X").length);
+		
+		assertEquals(2,mapBucket.get("3").length);
+	}
 }

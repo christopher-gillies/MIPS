@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 public class ApplicationOptions {
 	private String BAMList;
 	private String regionList;
+	private String outfile;
 	
 	private Command command;
 	
@@ -36,6 +37,14 @@ public class ApplicationOptions {
 
 	void setRegionList(String regionList) {
 		this.regionList = regionList;
+	}
+
+	String getOutfile() {
+		return outfile;
+	}
+
+	void setOutfile(String outfile) {
+		this.outfile = outfile;
 	}
 	
 	

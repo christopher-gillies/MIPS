@@ -9,6 +9,9 @@ import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.kidneyomics.util.interval.Interval;
+import org.kidneyomics.util.interval.IntervalBucket;
+
+import org.kidneyomics.util.interval.IntervalUtil;
 
 public class BEDUtil {
 	
@@ -26,6 +29,21 @@ public class BEDUtil {
 		}
 		return result;
 		
+	}
+	
+	
+	/**
+	 * 
+	 * @param file -- bed file of regions
+	 * @return a bucket of non overlapping intervals per chromosome
+	 * @throws IOException
+	 */
+	public static Map<String,IntervalBucket<BEDEntry>[]> readBedFileToChrMapOfIntervals(File file) throws IOException {
+		 List<Interval<BEDEntry>> entries = readBedFileToIntervals(file);
+		 Map<String,List<Interval<BEDEntry>>> intervalMap = organizeByChr(entries);
+		 Map<String,IntervalBucket<BEDEntry>[]> bucketMap = organizeByChrIntoBuckets(intervalMap);
+		 
+		 return bucketMap;
 	}
 	
 	/**
@@ -53,6 +71,7 @@ public class BEDUtil {
 		
 		return result;
 	}
+	
 	/**
 	 * 
 	 * @param list -- intervals
@@ -75,4 +94,22 @@ public class BEDUtil {
 		
 		return map;
 	}
+	
+	/**
+	 * 
+	 * @param inMap -- map of each chromosome of intervals
+	 * @return a map for each chromosome of non overlapping intervals
+	 */
+	public static Map<String,IntervalBucket<BEDEntry>[]> organizeByChrIntoBuckets(Map<String,List<Interval<BEDEntry>>> inMap) {
+		Map<String,IntervalBucket<BEDEntry>[]> map = new HashMap<>();
+		
+		for(Map.Entry<String, List<Interval<BEDEntry>>> entry : inMap.entrySet()) {
+			IntervalBucket<BEDEntry> buckets[] = IntervalUtil.mergeOverlappingIntervals(entry.getValue());
+			map.put(entry.getKey(), buckets);
+		}
+		
+		return map;
+	}
+	
+	
 }
