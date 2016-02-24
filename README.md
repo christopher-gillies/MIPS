@@ -11,6 +11,9 @@ ls /Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/*
 ```
 
 ##Code to create bam list
+* two columns
+* sample id
+* file path
 ```
 ls /Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/* | \
   perl -lane 'next if $_ =~ /.bai$/; $_ =~ /[_]([A-Z]+\d+)[.]dedup/; print "$1\t$_"' \
