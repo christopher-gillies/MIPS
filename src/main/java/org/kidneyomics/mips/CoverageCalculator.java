@@ -8,6 +8,7 @@ import org.kidneyomics.util.BEDUtil;
 import org.kidneyomics.util.RunCommand;
 import org.kidneyomics.util.SAMRecordPair;
 import org.kidneyomics.util.SAMRecordToIntervalConverter;
+import org.kidneyomics.util.SAMRecordToIntervalConverterSimple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -58,6 +59,8 @@ public class CoverageCalculator implements RunCommand {
 		String bamList = applicationOptions.getBAMList();
 		String bedFile = applicationOptions.getRegionList();
 		String outfile = applicationOptions.getOutfile();
+		boolean mergeOverlappingRegions = applicationOptions.getMergeOverlappingRegions();
+		
 		/*
 		 * Construct bam list
 		 */
@@ -76,8 +79,26 @@ public class CoverageCalculator implements RunCommand {
 		Map<String, IntervalBucket<BEDEntry>[]> probeMap = null;
 		List<Interval<BEDEntry>> entries = null;
 		try {
-			entries = BEDUtil.readBedFileToIntervals(new File(bedFile));
-			probeMap = BEDUtil.organizeByChrIntoBuckets(BEDUtil.organizeByChr(entries));
+			//remove duplicate entries i.e. have the same start and end positions
+			entries = BEDUtil.readBedFileToIntervals(new File(bedFile),true);
+			Map<String,List<Interval<BEDEntry>>> entriesPerChr = BEDUtil.organizeByChr(entries,mergeOverlappingRegions);
+			probeMap = BEDUtil.organizeByChrIntoBuckets(entriesPerChr);
+			
+			if(mergeOverlappingRegions) {
+				//we must make a new set of entries b/c some probes have been merged
+				entries.clear();
+				for(Map.Entry<String, List<Interval<BEDEntry>>> entry : entriesPerChr.entrySet()) {
+					entries.addAll(entry.getValue());
+				}
+			}
+			
+			for(Map.Entry<String, List<Interval<BEDEntry>>> entry : entriesPerChr.entrySet()) {
+				logger.info("Number of probes on " + entry.getKey() + ": " + entry.getValue().size());
+			}
+			
+			for(Map.Entry<String, IntervalBucket<BEDEntry>[]> entry : probeMap.entrySet()) {
+				logger.info("Number of non-overlappign regions on " + entry.getKey() + ": " + entry.getValue().length);
+			}
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -153,7 +174,7 @@ public class CoverageCalculator implements RunCommand {
 	
 	private void writeResults(String outfile,Map<BEDEntry,Map<String,Double>> coveragePerProbe, Map<String,Integer> unmappedReadCountPerSample, Map<String,Integer> readsPerSample) throws IOException {
 		
-		try(BufferedWriter writer = Files.newBufferedWriter(Paths.get(outfile), Charset.defaultCharset(), StandardOpenOption.CREATE)) {
+		try(BufferedWriter writer = Files.newBufferedWriter(Paths.get(outfile), Charset.defaultCharset(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
 		
 			//write header
 			List<String> sampleOrder = new LinkedList<String>();
@@ -219,7 +240,7 @@ public class CoverageCalculator implements RunCommand {
 		}
 	}
 	
-	private SAMRecordToIntervalConverter converter = new SAMRecordToIntervalConverter();
+	private SAMRecordToIntervalConverterSimple converter = new SAMRecordToIntervalConverterSimple();
 	private IntersectionComparator<BEDEntry> comparator = new IntersectionComparator<>();
 	
 	/**
@@ -239,24 +260,47 @@ public class CoverageCalculator implements RunCommand {
 		
 		HashSet<BEDEntry> entriesForRead = new HashSet<>();
 		
-		List<Interval<BEDEntry>> mate1 = converter.convert(pair.getMate1());
-		List<Interval<BEDEntry>> mate2 = converter.convert(pair.getMate2());
+		Interval<BEDEntry> mate1 = converter.convert(pair.getMate1());
+		Interval<BEDEntry> mate2 = converter.convert(pair.getMate2());
 		
-		//mate 1
-		for(Interval<BEDEntry> entry : mate1) {
-			List<Interval<BEDEntry>> bestMatches = IntervalUtil.findBestMatches(bucketsForChr, entry, comparator);
+		//both of the pairs should have come from the same fragment
+		//so we merge them together and find the best overall matching probe
+		Interval<BEDEntry> merged = BEDEntry.merge(mate1, mate2);
+		if(!mate1.overlapsWith(mate2)) {
+			logger.info(mate1 + " does not overlap " + mate2);
+			logger.info(merged + " length " + merged.length());
+		}
+		
+		List<Interval<BEDEntry>> bestMatches = IntervalUtil.findBestMatchesByStartAndEndPosition(bucketsForChr, merged, comparator);
+		for(Interval<BEDEntry> ie : bestMatches) {
+			entriesForRead.add(ie.payload());
+		}
+		
+		if(bestMatches.size() > 1) {
+			logger.info("Multiple best matches found");
 			for(Interval<BEDEntry> ie : bestMatches) {
-				entriesForRead.add(ie.payload());
+				logger.info(ie.toString());
 			}
 		}
 		
-		//mate 2
-		for(Interval<BEDEntry> entry : mate2) {
-			List<Interval<BEDEntry>> bestMatches = IntervalUtil.findBestMatches(bucketsForChr, entry, comparator);
-			for(Interval<BEDEntry> ie : bestMatches) {
-				entriesForRead.add(ie.payload());
-			}
-		}
+//		List<Interval<BEDEntry>> mate1 = converter.convert(pair.getMate1());
+//		List<Interval<BEDEntry>> mate2 = converter.convert(pair.getMate2());
+//		
+//		//mate 1
+//		for(Interval<BEDEntry> entry : mate1) {
+//			List<Interval<BEDEntry>> bestMatches = IntervalUtil.findBestMatches(bucketsForChr, entry, comparator);
+//			for(Interval<BEDEntry> ie : bestMatches) {
+//				entriesForRead.add(ie.payload());
+//			}
+//		}
+//		
+//		//mate 2
+//		for(Interval<BEDEntry> entry : mate2) {
+//			List<Interval<BEDEntry>> bestMatches = IntervalUtil.findBestMatches(bucketsForChr, entry, comparator);
+//			for(Interval<BEDEntry> ie : bestMatches) {
+//				entriesForRead.add(ie.payload());
+//			}
+//		}
 		
 		return entriesForRead;
 		

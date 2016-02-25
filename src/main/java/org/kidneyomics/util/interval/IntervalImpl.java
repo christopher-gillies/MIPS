@@ -128,5 +128,12 @@ public class IntervalImpl<T> implements Interval<T> {
 			return 0;
 		}
 	}
+
+	@Override
+	public Interval<T> merge(Interval<T> interval, T payload) {
+		int start = Math.min(this.start(), interval.start());
+		int end = Math.max(this.end(), interval.end());
+		return new IntervalImpl<T>(start, end, payload);
+	}
 	
 }

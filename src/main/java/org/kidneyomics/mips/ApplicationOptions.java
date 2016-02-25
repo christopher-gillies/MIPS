@@ -7,6 +7,7 @@ public class ApplicationOptions {
 	private String BAMList;
 	private String regionList;
 	private String outfile;
+	private boolean mergeOverlappingRegions = false;
 	
 	private Command command;
 	
@@ -45,6 +46,14 @@ public class ApplicationOptions {
 
 	void setOutfile(String outfile) {
 		this.outfile = outfile;
+	}
+
+	boolean getMergeOverlappingRegions() {
+		return mergeOverlappingRegions;
+	}
+
+	void setMergeOverlappingRegions(boolean mergeOverlappingRegions) {
+		this.mergeOverlappingRegions = mergeOverlappingRegions;
 	}
 	
 	

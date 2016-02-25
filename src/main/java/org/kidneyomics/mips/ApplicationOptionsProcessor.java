@@ -92,6 +92,18 @@ public class ApplicationOptionsProcessor implements OptionProcessor {
 			options.addOption(infileOp);
 		}
 		
+		{
+			Option option = Option.builder()
+			.argName("mergeOverlappingRegions")
+			.longOpt("mergeOverlappingRegions")
+			.desc("this flag will tell the program to merge bed region entries that overlap with each other")
+			.numberOfArgs(0)
+			.hasArg(false)
+			.required(false)
+			.build();
+			options.addOption(option);
+		}
+		
 		CommandLineParser parser = new DefaultParser();
 		
 		CommandLine cmd = parser.parse( options, args);
@@ -100,6 +112,12 @@ public class ApplicationOptionsProcessor implements OptionProcessor {
 			printHelp(options);
 			applicationOptions.setCommand(Command.HELP);
 			return;
+		}
+		
+		if(cmd.hasOption("mergeOverlappingRegions")) {
+			applicationOptions.setMergeOverlappingRegions(true);
+		} else {
+			applicationOptions.setMergeOverlappingRegions(false);
 		}
 		
 		if(cmd.hasOption("regionList")) {

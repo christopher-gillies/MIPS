@@ -31,6 +31,20 @@ public class BEDEntry implements Comparable<BEDEntry> {
 		return new IntervalImpl<BEDEntry>(this.start1Based(), this.end1Based(), this);
 	}
 	
+	public static Interval<BEDEntry> merge(Interval<BEDEntry> a, Interval<BEDEntry> b) {
+		Interval<BEDEntry> result = null;
+		BEDEntry entryA = a.payload();
+		BEDEntry entryB = b.payload();
+		
+		if(entryA.chr().equals(entryB.chr())) {
+			BEDEntry merged = new BEDEntry(entryA.chr, Math.min(entryA.start, entryB.start), Math.max(entryA.end, entryB.end)   );
+			result = a.merge(b, merged);
+		}
+		
+		return result;
+		
+	}
+	
 	@Override
 	public boolean equals(Object o) {
 		if(o instanceof BEDEntry) {
@@ -63,4 +77,5 @@ public class BEDEntry implements Comparable<BEDEntry> {
 			return this.chr.compareTo(o.chr);
 		}
 	}
+	
 }

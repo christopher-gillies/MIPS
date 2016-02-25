@@ -19,6 +19,13 @@ public class IntervalBucket<T> extends IntervalImpl<T> {
 		addInterval(firstInterval);
 	}
 	
+	public IntervalBucket(Interval<T> interval) {
+		super(interval.start(), interval.end(), null);
+		this.subIntervals = new HashSet<>();
+		
+		addInterval(interval);
+	}
+	
 	public IntervalBucket<T> addInterval(Interval<T> interval) {
 		
 		if(this.overlapsWith(interval)) {
@@ -42,7 +49,7 @@ public class IntervalBucket<T> extends IntervalImpl<T> {
 		
 	}
 	
-	public List<Interval<T>> findBestMatches(Interval<T> interval) {
+	public List<Interval<T>> findBestMatchesByOverlap(Interval<T> interval) {
 		List<Interval<T>> results = new LinkedList<>();
 		if(this.overlapsWith(interval)) {
 			int bestOverlap = 0;
@@ -55,6 +62,35 @@ public class IntervalBucket<T> extends IntervalImpl<T> {
 					
 					results.add(item);
 				} else if(tmpOverlap == bestOverlap) {
+					results.add(item);
+				}
+			}
+			return results;
+		} else {
+			return results;
+		}
+	}
+	
+	public List<Interval<T>> findBestMatchesByStartAndEndPosition(Interval<T> interval) {
+		List<Interval<T>> results = new LinkedList<>();
+		if(this.overlapsWith(interval)) {
+			int closestStart = Integer.MAX_VALUE;
+			int closestEnd = Integer.MAX_VALUE;
+			for(Interval<T> item : subIntervals) {
+				int distanceStart = Math.abs(item.start() - interval.start());
+				int distanceEnd = Math.abs(item.end() - interval.end());
+				//if the start is less than the closest start or the distance start = the current distance start and the end is closer, then clear out current results and update best values
+				if(distanceStart < closestStart || (distanceStart == closestStart && distanceEnd < closestEnd) ) {
+					closestStart = distanceStart;
+					closestEnd = distanceEnd;
+					//clear out old results
+					results.clear();
+					
+					results.add(item);
+					//perfect match based on start and end then add
+				} else if(distanceStart == closestStart && distanceEnd == closestEnd) {
+					//this should not actually be possible with current implementation, because intervals are defined as equal if their start and end positions match
+					//the sub intervals are stored in a set so these would be identical
 					results.add(item);
 				}
 			}

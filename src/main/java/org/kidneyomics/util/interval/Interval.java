@@ -7,4 +7,10 @@ public interface Interval<T> extends Comparable<Interval<T>> {
 	int end();
 	int overlap(Interval<T> interval);
 	boolean overlapsWith(Interval<T> interval);
+	/**
+	 * 
+	 * @param interval
+	 * @return a new interval spanning both the input interval and the current interval.
+	 */
+	Interval<T> merge(Interval<T> interval, T payload);
 }

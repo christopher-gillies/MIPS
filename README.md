@@ -1,6 +1,7 @@
 # MIPS
 
 # Summarizing coverage
+This analysis could be useful for seeing which probes are not being amplified
 ```
 MIPS=/Users/cgillies/Documents/workspace-sts-3.6.1.RELEASE/MIPS/release/MIPS-0.0.1.jar
 BEDFILE=/Users/cgillies/Documents/MIPS/run_2_24_2016/joined_pairs_picked.gapfill.bed
@@ -23,12 +24,72 @@ rownames(tbl) <- tbl[,"probe"]
 tbl <- tbl[,-1]
 #remove last two rows
 tbl <- data.frame(tbl[1:(dim(tbl)[1] - 2),]);
+g160202 <- grepl("160202",colnames(tbl))
+g160203 <- grepl("160203",colnames(tbl))
 
-meds <- apply(tbl,MARGIN=1,FUN=median)
-df <- data.frame(Median=log10(sort(meds,decreasing=TRUE)),Indices=(seq(1,length(meds)))/length(meds));
-ggplot(df,aes(x=Indices,y=Median)) + geom_point() + xlab("Cummulative fraction of probes") + ylab("log10 median depth")
+pdf("/Users/cgillies/Documents/MIPS/run_2_24_2016/coverage.pdf");
+meds_all <- apply(tbl,MARGIN=1,FUN=median)
+df_all <- data.frame(Median=log10(sort(meds_all,decreasing=TRUE)),Indices=(seq(1,length(meds_all)))/length(meds_all));
+ggplot(df_all,aes(x=Indices,y=Median)) + geom_point() + xlab("Cummulative fraction of probes") + ylab("log10 median read depth per probe") + ggtitle("All samples");
+
+
+meds_g160202 <- apply(tbl[g160202,],MARGIN=1,FUN=median)
+df_g160202 <- data.frame(Median=log10(sort(meds_g160202,decreasing=TRUE)),Indices=(seq(1,length(meds_g160202)))/length(meds_g160202));
+ggplot(df_g160202,aes(x=Indices,y=Median)) + geom_point() + xlab("Cummulative fraction of probes") + ylab("log10 median read depth per probe") + ggtitle("160202");
+
+meds_g160203 <- apply(tbl[g160203,],MARGIN=1,FUN=median)
+df_g160203 <- data.frame(Median=log10(sort(meds_g160203,decreasing=TRUE)),Indices=(seq(1,length(meds_g160203)))/length(meds_g160203));
+ggplot(df_g160203,aes(x=Indices,y=Median)) + geom_point() + xlab("Cummulative fraction of probes") + ylab("log10 median read depth per probe") + ggtitle("160203");
+
+dev.off();
 
 ```
+
+## Coverage of regions (merge overlapping probes and count depth)
+This analysis could be useful for seeing which regions are not getting amplified
+```
+MIPS=/Users/cgillies/Documents/workspace-sts-3.6.1.RELEASE/MIPS/release/MIPS-0.0.1.jar
+BEDFILE=/Users/cgillies/Documents/MIPS/run_2_24_2016/joined_pairs_picked.gapfill.bed
+BAMLIST=/Users/cgillies/Documents/MIPS/run_2_24_2016/bam.list.txt
+OUTFILE=/Users/cgillies/Documents/MIPS/run_2_24_2016/summary_of_coverage_merged_probes.txt
+java -jar $MIPS --command summarizeCoverage --regionList $BEDFILE --bamList $BAMLIST --outfile $OUTFILE --mergeOverlappingRegions
+```
+
+###Investigating results
+```
+head /Users/cgillies/Documents/MIPS/run_2_24_2016/summary_of_coverage_merged_probes.txt
+```
+
+###R script
+```
+library(ggplot2)
+tbl <- read.table("/Users/cgillies/Documents/MIPS/run_2_24_2016/summary_of_coverage_merged_probes.txt",sep="\t",header=T);
+rownames(tbl) <- tbl[,"probe"]
+#remove probe column
+tbl <- tbl[,-1]
+#remove last two rows
+tbl <- data.frame(tbl[1:(dim(tbl)[1] - 2),]);
+g160202 <- grepl("160202",colnames(tbl))
+g160203 <- grepl("160203",colnames(tbl))
+
+pdf("/Users/cgillies/Documents/MIPS/run_2_24_2016/coverage_of_regions.pdf");
+meds_all <- apply(tbl,MARGIN=1,FUN=median)
+df_all <- data.frame(Median=log10(sort(meds_all,decreasing=TRUE)),Indices=(seq(1,length(meds_all)))/length(meds_all));
+ggplot(df_all,aes(x=Indices,y=Median)) + geom_point() + xlab("Cummulative fraction of probes") + ylab("log10 median read depth per region") + ggtitle("All samples");
+
+
+meds_g160202 <- apply(tbl[g160202,],MARGIN=1,FUN=median)
+df_g160202 <- data.frame(Median=log10(sort(meds_g160202,decreasing=TRUE)),Indices=(seq(1,length(meds_g160202)))/length(meds_g160202));
+ggplot(df_g160202,aes(x=Indices,y=Median)) + geom_point() + xlab("Cummulative fraction of probes") + ylab("log10 median read depth per region") + ggtitle("160202");
+
+meds_g160203 <- apply(tbl[g160203,],MARGIN=1,FUN=median)
+df_g160203 <- data.frame(Median=log10(sort(meds_g160203,decreasing=TRUE)),Indices=(seq(1,length(meds_g160203)))/length(meds_g160203));
+ggplot(df_g160203,aes(x=Indices,y=Median)) + geom_point() + xlab("Cummulative fraction of probes") + ylab("log10 median read depth per region") + ggtitle("160203");
+
+dev.off();
+
+```
+
 # Creating a bam list
 ##Directory listing of bam list
 ```

@@ -30,6 +30,22 @@ public class BEDUtilTest {
 	
 	
 	@Test
+	public void testRemoveDuplicates() throws IOException {
+		ClassLoader classLoader = getClass().getClassLoader();
+		
+		File file = new File(classLoader.getResource("locations2.bed").getFile());
+
+		List<Interval<BEDEntry>> entries = BEDUtil.readBedFileToIntervals(file);
+		
+		assertEquals(8,entries.size());
+		
+		List<Interval<BEDEntry>> entries2 = BEDUtil.readBedFileToIntervals(file,true);
+		
+		assertEquals(7,entries2.size());
+	}
+	
+	
+	@Test
 	public void testOrganize() throws IOException {
 		ClassLoader classLoader = getClass().getClassLoader();
 		
@@ -39,7 +55,7 @@ public class BEDUtilTest {
 		
 		assertEquals(7,entries.size());
 		
-		Map<String,List<Interval<BEDEntry>>> map = BEDUtil.organizeByChr(entries);
+		Map<String,List<Interval<BEDEntry>>> map = BEDUtil.organizeByChr(entries,false);
 		
 		assertEquals(3,map.keySet().size());
 		
@@ -48,6 +64,28 @@ public class BEDUtilTest {
 		assertEquals(2,map.get("X").size());
 		
 		assertEquals(3,map.get("3").size());
+	}
+	
+	
+	@Test
+	public void testOrganize2() throws IOException {
+		ClassLoader classLoader = getClass().getClassLoader();
+		
+		File file = new File(classLoader.getResource("locations.bed").getFile());
+
+		List<Interval<BEDEntry>> entries = BEDUtil.readBedFileToIntervals(file);
+		
+		assertEquals(7,entries.size());
+		
+		Map<String,List<Interval<BEDEntry>>> map = BEDUtil.organizeByChr(entries,true);
+		
+		assertEquals(3,map.keySet().size());
+		
+		assertEquals(1,map.get("1").size());
+		
+		assertEquals(1,map.get("X").size());
+		
+		assertEquals(2,map.get("3").size());
 	}
 
 	
@@ -61,7 +99,7 @@ public class BEDUtilTest {
 		
 		assertEquals(7,entries.size());
 		
-		Map<String,List<Interval<BEDEntry>>> map = BEDUtil.organizeByChr(entries);
+		Map<String,List<Interval<BEDEntry>>> map = BEDUtil.organizeByChr(entries,false);
 		
 		Map<String,IntervalBucket<BEDEntry>[]> mapBucket = BEDUtil.organizeByChrIntoBuckets(map);
 		
