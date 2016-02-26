@@ -27,7 +27,11 @@ public class MipsApplication {
 			break;
 		case SUMMARIZE_PROBES_COVERAGE:
 			logger.info("Summarizing coverage");
-			command = context.getBean(CoverageCalculator.class);
+			command = context.getBean(CoverageCalculatorCommand.class);
+			break;
+		case WRITE_OUT_NONOVERLAPPING_REGIONS:
+			logger.info("Writing out non-overlapping regions");
+			command = context.getBean(WriteOutNonoverlappingRegionsCommand.class);
 			break;
 		default:
 			break;

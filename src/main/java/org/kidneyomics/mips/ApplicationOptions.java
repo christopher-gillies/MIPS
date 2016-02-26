@@ -13,7 +13,8 @@ public class ApplicationOptions {
 	
 	public enum Command {
 		HELP,
-		SUMMARIZE_PROBES_COVERAGE
+		SUMMARIZE_PROBES_COVERAGE,
+		WRITE_OUT_NONOVERLAPPING_REGIONS
 	}
 
 	String getBAMList() {

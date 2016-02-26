@@ -46,7 +46,7 @@ public class ApplicationOptionsProcessor implements OptionProcessor {
 			Option option = Option.builder()
 			.argName("command")
 			.longOpt("command")
-			.desc("the command to perform: summarizeCoverage")
+			.desc("the command to perform: summarizeCoverage, mergeOverlappingRegions")
 			.numberOfArgs(1)
 			.hasArg(true)
 			.valueSeparator(' ')
@@ -138,6 +138,8 @@ public class ApplicationOptionsProcessor implements OptionProcessor {
 			
 			if(command.equals("summarizeCoverage")) {
 				applicationOptions.setCommand(Command.SUMMARIZE_PROBES_COVERAGE);
+			} else if(command.equals("mergeOverlappingRegions")) {
+				applicationOptions.setCommand(Command.WRITE_OUT_NONOVERLAPPING_REGIONS);
 			}
 		
 		} else {

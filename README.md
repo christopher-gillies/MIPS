@@ -146,3 +146,12 @@ G1	/Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/160202sampson_mip1_G1.dedu
 H1	/Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/160202sampson_mip1_H1.dedup.sort.bam
 A1	/Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/160203sampson_mip1_A1.dedup.sort.bam
 ```
+
+# Write out non-overlapping list of bed entries
+This will take a list of bed entries as input (file) and then merge overlapping regions together and output a new file
+```
+MIPS=/Users/cgillies/Documents/workspace-sts-3.6.1.RELEASE/MIPS/release/MIPS-0.0.1.jar
+BEDFILE=/Users/cgillies/Documents/MIPS/run_2_24_2016/joined_pairs_picked.gapfill.bed
+OUTFILE=/Users/cgillies/Documents/MIPS/run_2_24_2016/joined_pairs_picked.gapfill.no.overlap.bed
+java -jar $MIPS --command mergeOverlappingRegions --regionList $BEDFILE --outfile $OUTFILE
+```

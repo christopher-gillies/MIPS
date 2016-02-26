@@ -60,6 +60,11 @@ public class BEDEntry implements Comparable<BEDEntry> {
 		return chr + ":" + start + "-" + end;
 	}
 	
+	public String toBEDString() {
+		return chr + "\t" + start + "\t" + end;
+	}
+	
+	
 	@Override
 	public int hashCode() {
 		int result = 17;
