@@ -15,13 +15,17 @@ java -jar $MIPS --command summarizeCoverage --regionList $BEDFILE --bamList $BAM
 head /Users/cgillies/Documents/MIPS/run_2_24_2016/summary_of_coverage.txt
 ```
 
-##R script
+##R script for coverage
 ```
 library(ggplot2)
 tbl <- read.table("/Users/cgillies/Documents/MIPS/run_2_24_2016/summary_of_coverage.txt",sep="\t",header=T);
 rownames(tbl) <- tbl[,"probe"]
 #remove probe column
 tbl <- tbl[,-1]
+
+#total coverage row
+total_coverage_per_sample = tbl[dim(tbl)[1] - 1,];
+
 #remove last two rows
 tbl <- data.frame(tbl[1:(dim(tbl)[1] - 2),]);
 g160202 <- grepl("160202",colnames(tbl))
@@ -41,8 +45,14 @@ meds_g160203 <- apply(tbl[g160203,],MARGIN=1,FUN=median)
 df_g160203 <- data.frame(Median=log10(sort(meds_g160203,decreasing=TRUE)),Indices=(seq(1,length(meds_g160203)))/length(meds_g160203));
 ggplot(df_g160203,aes(x=Indices,y=Median)) + geom_point() + xlab("Cummulative fraction of probes") + ylab("log10 median read depth per probe") + ggtitle("160203");
 
-dev.off();
+#plot total sample depth in millions
+df_total = data.frame(Total=as.numeric(total_coverage_per_sample/10^3))
+df_total$Batch = "160202";
+df_total$Batch[g160203] = "160203";
+df_total$Batch = factor(df_total$Batch);
 
+ggplot(df_total,aes(x=Total,fill=Batch)) + geom_histogram() + xlab("Total reads in thousands");
+dev.off();
 ```
 
 ## Coverage of regions (merge overlapping probes and count depth)
@@ -62,9 +72,11 @@ head /Users/cgillies/Documents/MIPS/run_2_24_2016/summary_of_coverage_merged_pro
 
 ###R script
 ```
+library(reshape)
 library(ggplot2)
 tbl <- read.table("/Users/cgillies/Documents/MIPS/run_2_24_2016/summary_of_coverage_merged_probes.txt",sep="\t",header=T);
 rownames(tbl) <- tbl[,"probe"]
+mtbl <- melt(tbl,c("probe"))
 #remove probe column
 tbl <- tbl[,-1]
 #remove last two rows
@@ -87,6 +99,16 @@ df_g160203 <- data.frame(Median=log10(sort(meds_g160203,decreasing=TRUE)),Indice
 ggplot(df_g160203,aes(x=Indices,y=Median)) + geom_point() + xlab("Cummulative fraction of probes") + ylab("log10 median read depth per region") + ggtitle("160203");
 
 dev.off();
+
+
+#boxplot per sample
+mtbl$Batch = "160202";
+mtbl$Batch[grepl("160203",mtbl$variable)] = "160203";
+mtbl$Batch = factor(mtbl$Batch)
+pdf("/Users/cgillies/Documents/MIPS/run_2_24_2016/region_depth_per_sample.pdf",width=20,height=10)
+ggplot(mtbl,aes(y=log10(value),x=factor(variable),color=Batch)) + geom_boxplot() + xlab("Sample") + ylab("Log10 depth per region") + ggtitle("Depth for overlapping regions of probes per sample");
+dev.off()
+
 
 ```
 
