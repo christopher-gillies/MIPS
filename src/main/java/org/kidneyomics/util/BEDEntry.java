@@ -57,7 +57,7 @@ public class BEDEntry implements Comparable<BEDEntry> {
 	
 	@Override
 	public String toString() {
-		return chr + ":" + start + "-" + end;
+		return chr + ":" + start1Based() + "-" + end1Based();
 	}
 	
 	public String toBEDString() {
