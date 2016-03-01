@@ -8,6 +8,7 @@ public class ApplicationOptions {
 	private String regionList;
 	private String outfile;
 	private boolean mergeOverlappingRegions = false;
+	private boolean intervalOutput = false;
 	
 	private Command command;
 	
@@ -56,6 +57,16 @@ public class ApplicationOptions {
 	void setMergeOverlappingRegions(boolean mergeOverlappingRegions) {
 		this.mergeOverlappingRegions = mergeOverlappingRegions;
 	}
+
+	boolean getIntervalOutput() {
+		return intervalOutput;
+	}
+
+	void setIntervalOutput(boolean intervalOutput) {
+		this.intervalOutput = intervalOutput;
+	}
+	
+	
 	
 	
 	

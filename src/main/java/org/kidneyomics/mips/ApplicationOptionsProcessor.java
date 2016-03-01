@@ -104,6 +104,18 @@ public class ApplicationOptionsProcessor implements OptionProcessor {
 			options.addOption(option);
 		}
 		
+		{
+			Option option = Option.builder()
+			.argName("intervalOutput")
+			.longOpt("intervalOutput")
+			.desc("this flag will tell the program to output an interval list chr:start-end 1based instead of 0based BED")
+			.numberOfArgs(0)
+			.hasArg(false)
+			.required(false)
+			.build();
+			options.addOption(option);
+		}
+		
 		CommandLineParser parser = new DefaultParser();
 		
 		CommandLine cmd = parser.parse( options, args);
@@ -112,6 +124,12 @@ public class ApplicationOptionsProcessor implements OptionProcessor {
 			printHelp(options);
 			applicationOptions.setCommand(Command.HELP);
 			return;
+		}
+		
+		if(cmd.hasOption("intervalOutput")) {
+			applicationOptions.setIntervalOutput(true);
+		} else {
+			applicationOptions.setIntervalOutput(false);
 		}
 		
 		if(cmd.hasOption("mergeOverlappingRegions")) {

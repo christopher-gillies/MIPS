@@ -39,7 +39,7 @@ public class WriteOutNonoverlappingRegionsCommand implements RunCommand {
 	public void runCommand() {
 		String bedFile = applicationOptions.getRegionList();
 		String outfile = applicationOptions.getOutfile();
-		
+		boolean intervalOut = applicationOptions.getIntervalOutput();
 		List<Interval<BEDEntry>> entries = null;
 		Map<String,List<Interval<BEDEntry>>> entriesPerChr = null;
 		try {
@@ -62,7 +62,11 @@ public class WriteOutNonoverlappingRegionsCommand implements RunCommand {
 				for(Interval<BEDEntry> value : values) {
 					//bedEntries.add(value.payload());
 					BEDEntry entry = value.payload();
-					writer.write(entry.toBEDString());
+					if(intervalOut) {
+						writer.write(entry.toString());
+					} else {
+						writer.write(entry.toBEDString());
+					}
 					writer.write("\n");
 				}
 			}
