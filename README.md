@@ -155,3 +155,12 @@ BEDFILE=/Users/cgillies/Documents/MIPS/run_2_24_2016/joined_pairs_picked.gapfill
 OUTFILE=/Users/cgillies/Documents/MIPS/run_2_24_2016/joined_pairs_picked.gapfill.no.overlap.bed
 java -jar $MIPS --command mergeOverlappingRegions --regionList $BEDFILE --outfile $OUTFILE
 ```
+
+# Write out non-overlapping list of intervals
+This will take a list of bed entries as input (file) and then merge overlapping regions together and output a new interval list (chr:start-end) (1-based) file
+```
+MIPS=/Users/cgillies/Documents/workspace-sts-3.6.1.RELEASE/MIPS/release/MIPS-0.0.1.jar
+BEDFILE=/Users/cgillies/Documents/MIPS/run_2_24_2016/joined_pairs_picked.gapfill.bed
+OUTFILE=/Users/cgillies/Documents/MIPS/run_2_24_2016/joined_pairs_picked.gapfill.no.overlap.txt
+java -jar $MIPS --command mergeOverlappingRegions --regionList $BEDFILE --intervalOutput --outfile $OUTFILE
+```
