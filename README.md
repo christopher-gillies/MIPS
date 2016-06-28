@@ -10,6 +10,29 @@ OUTFILE=/Users/cgillies/Documents/MIPS/run_2_24_2016/summary_of_coverage.txt
 java -jar $MIPS --command summarizeCoverage --regionList $BEDFILE --bamList $BAMLIST --outfile $OUTFILE
 ```
 
+## bam.list.txt format
+```
+Christophers-MacBook-Pro:~ cgillies$ cat /Users/cgillies/Documents/MIPS/run_2_24_2016/bam.list.txt
+160202_A1	/Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/160202_mip1_A1.dedup.sort.bam
+160202_A2	/Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/160202_mip1_A2.dedup.sort.bam
+160202_B1	/Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/160202_mip1_B1.dedup.sort.bam
+160202_C1	/Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/160202_mip1_C1.dedup.sort.bam
+160202_D1	/Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/160202_mip1_D1.dedup.sort.bam
+160202_E1	/Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/160202_mip1_E1.dedup.sort.bam
+160202_F1	/Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/160202_mip1_F1.dedup.sort.bam
+160202_G1	/Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/160202_mip1_G1.dedup.sort.bam
+160202_H1	/Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/160202_mip1_H1.dedup.sort.bam
+160203_A1	/Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/160203_mip1_A1.dedup.sort.bam
+160203_A2	/Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/160203_mip1_A2.dedup.sort.bam
+160203_B1	/Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/160203_mip1_B1.dedup.sort.bam
+160203_B2	/Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/160203_mip1_B2.dedup.sort.bam
+160203_C2	/Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/160203_mip1_C2.dedup.sort.bam
+160203_E1	/Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/160203_mip1_E1.dedup.sort.bam
+160203_F1	/Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/160203_mip1_F1.dedup.sort.bam
+160203_G1	/Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/160203_mip1_G1.dedup.sort.bam
+160203_H1	/Users/cgillies/Documents/MIPS/run_2_24_2016/dedup/160203_mip1_H1.dedup.sort.bam
+```
+
 ##Investigating results
 ```
 head /Users/cgillies/Documents/MIPS/run_2_24_2016/summary_of_coverage.txt
