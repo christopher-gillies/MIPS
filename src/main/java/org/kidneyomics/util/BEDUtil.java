@@ -37,6 +37,17 @@ public class BEDUtil {
 		for(BEDEntry entry : entries) {
 			Interval<BEDEntry> interval = entry.toInterval();
 			
+			/*
+				set.contains(entry)	removeDuplicates	!set.contains(entry) 	!removeDuplicates	OR
+					0			0			1			1		1
+					0			1			1			0		1
+					1			0			0			1		1
+					1			1			0			0		0
+			
+			enter this block unless we are removing duplicates and the set contains the entry
+			
+			*/
+			
 			//only store if we are not removing duplicates of if we are removing duplicates, then only if set does not contain the interval
 			if(!set.contains(entry) || !removeDuplicates) {
 				set.add(entry);
