@@ -7,15 +7,21 @@ public class ApplicationOptions {
 	private String BAMList;
 	private String regionList;
 	private String outfile;
+	
+	/**
+	 * The purpose of this option is to tell the coverage calculator command to merge
+	 */
 	private boolean mergeOverlappingRegions = false;
 	private boolean intervalOutput = false;
+	private String region = "";
 	
 	private Command command;
 	
 	public enum Command {
 		HELP,
 		SUMMARIZE_PROBES_COVERAGE,
-		WRITE_OUT_NONOVERLAPPING_REGIONS
+		WRITE_OUT_NONOVERLAPPING_REGIONS,
+		CHECK_REGION_OVERLAP_PROBES
 	}
 
 	String getBAMList() {
@@ -64,6 +70,14 @@ public class ApplicationOptions {
 
 	void setIntervalOutput(boolean intervalOutput) {
 		this.intervalOutput = intervalOutput;
+	}
+
+	String getRegion() {
+		return region;
+	}
+
+	void setRegion(String region) {
+		this.region = region;
 	}
 	
 	

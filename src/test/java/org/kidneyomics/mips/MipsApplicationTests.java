@@ -1,4 +1,4 @@
-package org.kidneyomics;
+package org.kidneyomics.mips;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -31,6 +31,12 @@ public class BEDEntry implements Comparable<BEDEntry> {
 		return new IntervalImpl<BEDEntry>(this.start1Based(), this.end1Based(), this);
 	}
 	
+	/**
+	 * 
+	 * @param interval a
+	 * @param interval b
+	 * @return returns the union of a and b. this assumes that either a overlaps with b or a is directly next to b
+	 */
 	public static Interval<BEDEntry> merge(Interval<BEDEntry> a, Interval<BEDEntry> b) {
 		Interval<BEDEntry> result = null;
 		BEDEntry entryA = a.payload();

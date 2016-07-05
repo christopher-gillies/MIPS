@@ -33,6 +33,9 @@ public class MipsApplication {
 			logger.info("Writing out non-overlapping regions");
 			command = context.getBean(WriteOutNonoverlappingRegionsCommand.class);
 			break;
+		case CHECK_REGION_OVERLAP_PROBES:
+			logger.info("Checking if the regions sepecified overlaps some probe");
+			command = context.getBean(CheckIfRegionOverlapsSomeProbeCommand.class);
 		default:
 			break;
     	

@@ -57,6 +57,19 @@ public class ApplicationOptionsProcessor implements OptionProcessor {
 		
 		{
 			Option option = Option.builder()
+			.argName("checkRegion")
+			.longOpt("checkRegion")
+			.desc("the region that you want to check")
+			.numberOfArgs(1)
+			.hasArg(true)
+			.valueSeparator(' ')
+			.required(false)
+			.build();
+			options.addOption(option);
+		}
+		
+		{
+			Option option = Option.builder()
 			.argName("bamList")
 			.longOpt("bamList")
 			.desc("a bam list")
@@ -96,7 +109,7 @@ public class ApplicationOptionsProcessor implements OptionProcessor {
 			Option option = Option.builder()
 			.argName("mergeOverlappingRegions")
 			.longOpt("mergeOverlappingRegions")
-			.desc("this flag will tell the program to merge bed region entries that overlap with each other")
+			.desc("this flag will tell the program to merge bed region entries that overlap with each other. this is used with the summarizeCoverage command")
 			.numberOfArgs(0)
 			.hasArg(false)
 			.required(false)
@@ -150,6 +163,10 @@ public class ApplicationOptionsProcessor implements OptionProcessor {
 			applicationOptions.setOutfile(cmd.getOptionValue("outfile"));
 		}
 		
+		if(cmd.hasOption("checkRegion")) {
+			applicationOptions.setRegion(cmd.getOptionValue("checkRegion"));
+		}
+		
 		
 		if(cmd.hasOption("command")) {
 			String command = cmd.getOptionValue("command");
@@ -158,6 +175,8 @@ public class ApplicationOptionsProcessor implements OptionProcessor {
 				applicationOptions.setCommand(Command.SUMMARIZE_PROBES_COVERAGE);
 			} else if(command.equals("mergeOverlappingRegions")) {
 				applicationOptions.setCommand(Command.WRITE_OUT_NONOVERLAPPING_REGIONS);
+			} else if(command.equals("checkIfRegionOverlapsProbes")) {
+				applicationOptions.setCommand(Command.CHECK_REGION_OVERLAP_PROBES);
 			}
 		
 		} else {

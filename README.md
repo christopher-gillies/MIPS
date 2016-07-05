@@ -187,3 +187,11 @@ BEDFILE=/Users/cgillies/Documents/MIPS/run_2_24_2016/joined_pairs_picked.gapfill
 OUTFILE=/Users/cgillies/Documents/MIPS/run_2_24_2016/joined_pairs_picked.gapfill.no.overlap.txt
 java -jar $MIPS --command mergeOverlappingRegions --regionList $BEDFILE --intervalOutput --outfile $OUTFILE
 ```
+
+# Check if a region overlaps some probe in your probe list
+This is useful to see if variants you are finding are in the regions that you specified
+```
+MIPS=/Users/cgillies/Documents/workspace-sts-3.6.1.RELEASE/MIPS/release/MIPS-0.0.1.jar
+BEDFILE="/Users/cgillies/Google Drive/MIPS/RUN_6_27_2016/joined_pairs_picked.gapfill.bed"
+java -jar $MIPS --command checkIfRegionOverlapsProbes --regionList "$BEDFILE" --checkRegion 9:711265
+```
