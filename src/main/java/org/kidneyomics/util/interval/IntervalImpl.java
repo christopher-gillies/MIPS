@@ -22,7 +22,7 @@ public class IntervalImpl<T> implements Interval<T> {
 	@Override
 	public boolean equals(Object o) {
 		if(o instanceof IntervalImpl) {
-			IntervalImpl<T> other = (IntervalImpl<T>) o;
+			IntervalImpl<?> other = (IntervalImpl<?>) o;
 			if(this.start == other.start && this.end == other.end) {
 				return true;
 			} else {
@@ -42,7 +42,7 @@ public class IntervalImpl<T> implements Interval<T> {
 	}
 
 	@Override
-	public int compareTo(Interval<T> b) {
+	public int compareTo(Interval<?> b) {
 		int cmp = this.start() - b.start();
 		if(cmp == 0) {
 			return this.length() - b.length();
@@ -81,7 +81,7 @@ public class IntervalImpl<T> implements Interval<T> {
 	}
 
 	@Override
-	public boolean overlapsWith(Interval<T> interval) {
+	public boolean overlapsWith(Interval<?> interval) {
 
 		if(interval.start() >= this.start && interval.start() <= this.end) {
 			/*
@@ -119,7 +119,7 @@ public class IntervalImpl<T> implements Interval<T> {
 
 
 	@Override
-	public int overlap(Interval<T> interval) {
+	public int overlap(Interval<?> interval) {
 		if(this.overlapsWith(interval)) {
 			int maxStart = Math.max(this.start, interval.start());
 			int minEnd = Math.min(this.end, interval.end());

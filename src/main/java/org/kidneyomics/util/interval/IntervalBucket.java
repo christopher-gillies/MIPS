@@ -49,7 +49,7 @@ public class IntervalBucket<T> extends IntervalImpl<T> {
 		
 	}
 	
-	public List<Interval<T>> findBestMatchesByOverlap(Interval<T> interval) {
+	public List<Interval<T>> findBestMatchesByOverlap(Interval<?> interval) {
 		List<Interval<T>> results = new LinkedList<>();
 		if(this.overlapsWith(interval)) {
 			int bestOverlap = 0;
@@ -71,7 +71,7 @@ public class IntervalBucket<T> extends IntervalImpl<T> {
 		}
 	}
 	
-	public List<Interval<T>> findBestMatchesByStartAndEndPosition(Interval<T> interval) {
+	public List<Interval<T>> findBestMatchesByStartAndEndPosition(Interval<?> interval) {
 		List<Interval<T>> results = new LinkedList<>();
 		if(this.overlapsWith(interval)) {
 			int closestStart = Integer.MAX_VALUE;

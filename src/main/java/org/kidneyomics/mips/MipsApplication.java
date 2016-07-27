@@ -36,6 +36,11 @@ public class MipsApplication {
 		case CHECK_REGION_OVERLAP_PROBES:
 			logger.info("Checking if the regions sepecified overlaps some probe");
 			command = context.getBean(CheckIfRegionOverlapsSomeProbeCommand.class);
+			break;
+		case GENE_PROBE_COVERAGE:
+			logger.info("Checking that genes are covered by probes");
+			command = context.getBean(GeneProbeCoverageCommand.class);
+			break;
 		default:
 			break;
     	

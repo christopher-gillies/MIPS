@@ -7,6 +7,7 @@ public class ApplicationOptions {
 	private String BAMList;
 	private String regionList;
 	private String outfile;
+	private String geneFile;
 	
 	/**
 	 * The purpose of this option is to tell the coverage calculator command to merge
@@ -14,6 +15,7 @@ public class ApplicationOptions {
 	private boolean mergeOverlappingRegions = false;
 	private boolean intervalOutput = false;
 	private String region = "";
+	private String gtf = "";
 	
 	private Command command;
 	
@@ -21,7 +23,27 @@ public class ApplicationOptions {
 		HELP,
 		SUMMARIZE_PROBES_COVERAGE,
 		WRITE_OUT_NONOVERLAPPING_REGIONS,
-		CHECK_REGION_OVERLAP_PROBES
+		CHECK_REGION_OVERLAP_PROBES,
+		GENE_PROBE_COVERAGE
+	}
+	
+	
+
+	
+	public String getGeneFile() {
+		return geneFile;
+	}
+
+	public void setGeneFile(String geneFile) {
+		this.geneFile = geneFile;
+	}
+
+	public String getGtf() {
+		return gtf;
+	}
+
+	public void setGtf(String gtf) {
+		this.gtf = gtf;
 	}
 
 	String getBAMList() {

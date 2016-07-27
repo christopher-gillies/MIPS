@@ -241,7 +241,7 @@ public class CoverageCalculatorCommand implements RunCommand {
 	}
 	
 	private SAMRecordToIntervalConverterSimple converter = new SAMRecordToIntervalConverterSimple();
-	private IntersectionComparator<BEDEntry> comparator = new IntersectionComparator<>();
+	private IntersectionComparator comparator = new IntersectionComparator();
 	
 	/**
 	 * 

@@ -195,3 +195,16 @@ MIPS=/Users/cgillies/Documents/workspace-sts-3.6.1.RELEASE/MIPS/release/MIPS-0.0
 BEDFILE="/Users/cgillies/Google Drive/MIPS/RUN_6_27_2016/joined_pairs_picked.gapfill.bed"
 java -jar $MIPS --command checkIfRegionOverlapsProbes --regionList "$BEDFILE" --checkRegion 9:711265
 ```
+
+# Find out if all the coding sequence exons are covered for you gene list
+This will take a list of bed entries as input (file) and then merge overlapping regions together and output a new interval list (chr:start-end) (1-based) file
+```
+MIPS=/Users/cgillies/Documents/workspace-sts-3.6.1.RELEASE/MIPS/release/MIPS-0.0.1.jar
+GTF="/Users/cgillies/Google Drive/MIPS/GENE_LIST_727_2016/gencode.v19.annotation.gtf.gz"
+GENEFILE="/Users/cgillies/Google Drive/MIPS/GENE_LIST_727_2016/genes.modified.txt"
+BEDFILE="/Users/cgillies/Google Drive/MIPS/GENE_LIST_727_2016/sampsonv3_FINAL_TARGETS.bed"
+OUTFILE="/Users/cgillies/Google Drive/MIPS/GENE_LIST_727_2016/missing_exons.txt"
+java -jar $MIPS --command geneProbeCoverage --regionList "$BEDFILE" --outfile "$OUTFILE" --gtf "$GTF" --geneFile "$GENEFILE"
+
+head "$OUTFILE"
+```

@@ -82,6 +82,33 @@ public class ApplicationOptionsProcessor implements OptionProcessor {
 		}
 		
 		{
+			Option option = Option.builder()
+			.argName("geneFile")
+			.longOpt("geneFile")
+			.desc("a file containing a gene list")
+			.numberOfArgs(1)
+			.hasArg(true)
+			.valueSeparator(' ')
+			.required(false)
+			.build();
+			options.addOption(option);
+		}
+		
+		{
+			Option option = Option.builder()
+			.argName("gtf")
+			.longOpt("gtf")
+			.desc("a gene definition file")
+			.numberOfArgs(1)
+			.hasArg(true)
+			.valueSeparator(' ')
+			.required(false)
+			.build();
+			options.addOption(option);
+		}
+		
+		
+		{
 			Option outfileOp = Option.builder()
 			.argName("outfile")
 			.longOpt("outfile")
@@ -159,6 +186,14 @@ public class ApplicationOptionsProcessor implements OptionProcessor {
 			applicationOptions.setBAMList(cmd.getOptionValue("bamList"));
 		}
 		
+		if(cmd.hasOption("geneFile")) {
+			applicationOptions.setGeneFile(cmd.getOptionValue("geneFile"));
+		}
+		
+		if(cmd.hasOption("gtf")) {
+			applicationOptions.setGtf(cmd.getOptionValue("gtf"));
+		}
+		
 		if(cmd.hasOption("outfile")) {
 			applicationOptions.setOutfile(cmd.getOptionValue("outfile"));
 		}
@@ -177,6 +212,8 @@ public class ApplicationOptionsProcessor implements OptionProcessor {
 				applicationOptions.setCommand(Command.WRITE_OUT_NONOVERLAPPING_REGIONS);
 			} else if(command.equals("checkIfRegionOverlapsProbes")) {
 				applicationOptions.setCommand(Command.CHECK_REGION_OVERLAP_PROBES);
+			} else if(command.equals("geneProbeCoverage")) {
+				applicationOptions.setCommand(Command.GENE_PROBE_COVERAGE);
 			}
 		
 		} else {

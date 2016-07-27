@@ -46,7 +46,7 @@ public class IntervalUtil {
 	 * @param comparator --- comparator for binary search
 	 * @return a list of best matching intervals
 	 */
-	public static <T> List<Interval<T>> findBestMatchesByOverlap(IntervalBucket<T>[] buckets, Interval<T> target, IntersectionComparator<T> comparator) {
+	public static <T> List<Interval<T>> findBestMatchesByOverlap(IntervalBucket<T>[] buckets, Interval<?> target, IntersectionComparator comparator) {
 		
 		LinkedList<Interval<T>> results = new LinkedList<>();
 		int index = Arrays.binarySearch(buckets, target, comparator);
@@ -66,7 +66,7 @@ public class IntervalUtil {
 	 * @param comparator --- comparator for binary search
 	 * @return a list of best matching intervals
 	 */
-	public static <T> List<Interval<T>> findBestMatchesByStartAndEndPosition(IntervalBucket<T>[] buckets, Interval<T> target, IntersectionComparator<T> comparator) {
+	public static <T> List<Interval<T>> findBestMatchesByStartAndEndPosition(IntervalBucket<T>[] buckets, Interval<?> target, IntersectionComparator comparator) {
 		
 		LinkedList<Interval<T>> results = new LinkedList<>();
 		int index = Arrays.binarySearch(buckets, target, comparator);

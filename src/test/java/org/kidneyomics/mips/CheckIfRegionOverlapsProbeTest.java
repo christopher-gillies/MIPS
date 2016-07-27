@@ -24,7 +24,7 @@ public class CheckIfRegionOverlapsProbeTest {
 		
 		when(ao.getRegionList()).thenReturn(file.getAbsolutePath());
 		
-		LoggerService loggerService = mock(LoggerService.class);
+		LoggerService loggerService = new LoggerService();
 		
 		CheckIfRegionOverlapsSomeProbeCommand command = new CheckIfRegionOverlapsSomeProbeCommand(ao,loggerService);
 		
@@ -44,7 +44,7 @@ public class CheckIfRegionOverlapsProbeTest {
 		
 		when(ao.getRegionList()).thenReturn(file.getAbsolutePath());
 		
-		LoggerService loggerService = mock(LoggerService.class);
+		LoggerService loggerService = new LoggerService();
 		
 		CheckIfRegionOverlapsSomeProbeCommand command = new CheckIfRegionOverlapsSomeProbeCommand(ao,loggerService);
 		
@@ -64,7 +64,7 @@ public class CheckIfRegionOverlapsProbeTest {
 		
 		when(ao.getRegionList()).thenReturn(file.getAbsolutePath());
 		
-		LoggerService loggerService = mock(LoggerService.class);
+		LoggerService loggerService = new LoggerService();
 		
 		CheckIfRegionOverlapsSomeProbeCommand command = new CheckIfRegionOverlapsSomeProbeCommand(ao,loggerService);
 		

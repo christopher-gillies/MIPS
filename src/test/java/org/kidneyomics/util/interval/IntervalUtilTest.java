@@ -82,7 +82,7 @@ public class IntervalUtilTest {
 			System.err.println(buckets[i]);
 		}
 		
-		List<Interval<Integer>> results = IntervalUtil.findBestMatchesByOverlap(buckets, new IntervalImpl<Integer>(100,101,null), new IntersectionComparator<Integer>() );
+		List<Interval<Integer>> results = IntervalUtil.findBestMatchesByOverlap(buckets, new IntervalImpl<Integer>(100,101,null), new IntersectionComparator() );
 		
 		assertEquals(1,results.size());
 	}
